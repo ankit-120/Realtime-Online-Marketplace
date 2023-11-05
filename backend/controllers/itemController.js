@@ -26,6 +26,7 @@ export const addItem = async (req, res, next) => {
             stock,
             image,
             seller: req.user,
+            isSold: false,
         });
 
         //sending response
@@ -42,7 +43,19 @@ export const addItem = async (req, res, next) => {
 //get all items except the items listed by logged in user
 export const getAllItemsExcept = async (req, res, next) => {
     try {
-        const items = await Item.find({ seller: { $ne: req.user._id } });
+        let search = {};
+        if (req.query) {
+            search = {
+                name: {
+                    $regex: req.query.keyword,
+                    $options: "i",
+                },
+            };
+        }
+        const items = await Item.find(
+            { seller: { $ne: req.user._id } },
+            search
+        );
         res.status(200).json({
             success: true,
             items,
@@ -55,7 +68,16 @@ export const getAllItemsExcept = async (req, res, next) => {
 //get all items
 export const getAllItems = async (req, res, next) => {
     try {
-        const items = await Item.find();
+        let search = {};
+        if (req.query) {
+            search = {
+                name: {
+                    $regex: req.query.keyword,
+                    $options: "i",
+                },
+            };
+        }
+        const items = await Item.find(search);
         res.status(200).json({
             success: true,
             items,
@@ -77,4 +99,10 @@ export const getItemById = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+//buying the item
+export const buyItem = async (req, res, next) => {
+    try {
+    } catch (error) {}
 };

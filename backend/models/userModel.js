@@ -15,6 +15,14 @@ const schema = new mongoose.Schema({
         required: [true, "Please provide password"],
         select: false,
     },
+    soldItems: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Item",
+    },
+    purchasedItems: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Item",
+    },
 });
 
 export const User = mongoose.model("User", schema);

@@ -20,6 +20,9 @@ const schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
+    isSold: {
+        type: Boolean,
+    },
 });
 
 export const Item = mongoose.model("Item", schema);

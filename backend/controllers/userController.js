@@ -86,3 +86,16 @@ export const login = async (req, res, next) => {
         next(error);
     }
 };
+
+export const logout = (req, res) => {
+    res.status(200)
+        .cookie("token", "", {
+            expires: new Date(Date.now()),
+            sameSite: "none",
+            secure: true,
+        })
+        .json({
+            success: false,
+            message: "Loggedout successfully",
+        });
+};

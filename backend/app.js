@@ -2,6 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./config/database.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
+import userRoute from "./routes/userRoute.js";
+import itemRouter from "./routes/itemRoute.js";
+import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
 
 //environment variable config
 dotenv.config({
@@ -9,10 +13,23 @@ dotenv.config({
 });
 
 //database connection
-// connectDb();
+connectDb();
 
 //creating app
 const app = express();
+
+//using middlewares
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+    fileUpload({
+        useTempFiles: true,
+    })
+);
+
+//using routes
+app.use("/api/user", userRoute);
+app.use("/api/item", itemRouter);
 
 app.use(errorMiddleware);
 

@@ -7,6 +7,7 @@ import itemRouter from "./routes/itemRoute.js";
 import auctionRoute from "./routes/auctionRoute.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import cors from "cors";
 
 //environment variable config
 dotenv.config({
@@ -27,6 +28,7 @@ app.use(
         useTempFiles: true,
     })
 );
+app.use(cors({ credentials: true, origin: true }));
 
 //using routes
 app.use("/api/user", userRoute);

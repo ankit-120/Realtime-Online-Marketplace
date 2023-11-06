@@ -15,9 +15,12 @@ import axios from "axios";
 import { login, register } from "@/apis";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "../facilities/userSlice";
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //collect register data
   const [signupData, setSignupData] = useState({
@@ -56,6 +59,7 @@ const Register = () => {
       });
       setLoading(false);
       toast.success("Registered successfully");
+      dispatch(setUserInfo(data.user));
       console.log(data);
       navigate("/");
     } catch (error) {
@@ -84,6 +88,7 @@ const Register = () => {
       });
       setLoading(false);
       toast.success("Loggedin successfully");
+      dispatch(setUserInfo(data.user));
       console.log(data);
       navigate("/");
     } catch (error) {

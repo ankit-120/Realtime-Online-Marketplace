@@ -3,7 +3,7 @@ import { Item } from "../models/itemModel.js";
 
 export const addItem = async (req, res, next) => {
     try {
-        const { name, price, stock } = JSON.parse(req.body.data);
+        const { name, price, description } = JSON.parse(req.body.data);
 
         //upload image to clodinary if it is present
         let image = "default.png";
@@ -23,8 +23,8 @@ export const addItem = async (req, res, next) => {
         const item = await Item.create({
             name,
             price,
-            stock,
             image,
+            description,
             seller: req.user,
             isSold: false,
         });

@@ -9,9 +9,9 @@ const schema = mongoose.Schema({
         type: Number,
         required: [true, "Please provide price"],
     },
-    stock: {
-        type: Number,
-        required: [true, "Please provide price"],
+    description: {
+        type: String,
+        required: [true, "Please provide description"],
     },
     image: {
         type: String,

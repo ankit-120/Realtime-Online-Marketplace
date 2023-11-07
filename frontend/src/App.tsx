@@ -7,6 +7,8 @@ import Navbar from "./component/Navbar";
 import Products from "./pages/Products";
 import AddProduct from "./pages/AddProduct";
 import SingleProductPage from "./pages/SingleProductPage";
+import MyProducts from "./pages/MyProducts";
+import AddToAuction from "./pages/AddToAuction";
 
 const App = () => {
   return (
@@ -17,7 +19,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/add/product" element={<AddProduct />} />
+          <Route path="/my/product" element={<MyProducts />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/auction/add" element={<AddToAuction />} />
           <Route path="/product/:id" element={<SingleProductPage />} />
         </Routes>
       </BrowserRouter>

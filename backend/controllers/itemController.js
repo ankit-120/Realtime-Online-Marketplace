@@ -1,5 +1,6 @@
 import cloudinary from "../config/cloudinaryConfig.js";
 import { Item } from "../models/itemModel.js";
+import { User } from "../models/userModel.js";
 
 export const addItem = async (req, res, next) => {
     try {
@@ -43,19 +44,23 @@ export const addItem = async (req, res, next) => {
 //get all items except the items listed by logged in user
 export const getAllItemsExcept = async (req, res, next) => {
     try {
-        let search = {};
-        if (req.query) {
-            search = {
-                name: {
-                    $regex: req.query.keyword,
-                    $options: "i",
-                },
-            };
-        }
-        const items = await Item.find(
-            { seller: { $ne: req.user._id } },
-            search
-        );
+        // let search = {};
+        // if (req.query) {
+        //     search = {
+        //         name: {
+        //             $regex: req.query.keyword,
+        //             $options: "i",
+        //         },
+        //     };
+        // }
+        const items = await Item.find({
+            seller: { $ne: req.user._id },
+            name: {
+                $regex: req.query.keyword ? req.query.keyword : "",
+                $options: "i",
+            },
+            isSold: false,
+        });
         res.status(200).json({
             success: true,
             items,
@@ -77,7 +82,26 @@ export const getAllItems = async (req, res, next) => {
                 },
             };
         }
-        const items = await Item.find(search);
+        const items = await Item.find({
+            name: {
+                $regex: req.query.keyword ? req.query.keyword : "",
+                $options: "i",
+            },
+            isSold: false,
+        });
+        res.status(200).json({
+            success: true,
+            items,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+//get my products
+export const getMyProducts = async (req, res, next) => {
+    try {
+        const items = await Item.find({ seller: req.user });
         res.status(200).json({
             success: true,
             items,
@@ -90,7 +114,7 @@ export const getAllItems = async (req, res, next) => {
 //get item by id
 export const getItemById = async (req, res, next) => {
     try {
-        console.log(req.params.id);
+        // console.log(req.params.id);
         const item = await Item.findOne({ _id: req.params.id });
         res.status(200).json({
             success: true,
@@ -104,5 +128,24 @@ export const getItemById = async (req, res, next) => {
 //buying the item
 export const buyItem = async (req, res, next) => {
     try {
-    } catch (error) {}
+        const { sellerId, itemId } = req.body;
+        const item = await Item.findById(itemId);
+        const seller = await User.findById(sellerId);
+        const user = req.user;
+        item.isSold = true;
+        seller.soldItems = [...seller.soldItems, item];
+        user.purchasedItems = [...user.purchasedItems, item];
+        await item.save();
+        await seller.save();
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: "Purchase successfull",
+            item,
+            user,
+            seller,
+        });
+    } catch (error) {
+        next(error);
+    }
 };

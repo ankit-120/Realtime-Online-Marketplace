@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setKeyword } from "../facilities/productSlice";
+import type { RootState } from "../facilities/store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const { userInfo } = useSelector((state: RootState) => state.user);
   //search query
   const [query, setQuery] = useState("");
 
@@ -14,6 +23,10 @@ const Navbar = () => {
   const handleSearch = () => {
     dispatch(setKeyword(query));
   };
+
+  useEffect(() => {
+    // console.log("cjeck");
+  });
 
   const location = useLocation();
   const isHomePage = location.pathname.includes("/products");
@@ -51,9 +64,22 @@ const Navbar = () => {
         <Link to={"/auction"} className="m-3 font-semibold">
           Auction
         </Link>
-        <Link to={"/register"} className="m-3 font-semibold">
-          Register
-        </Link>
+        {userInfo.name != "" ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <div className="m-3 font-semibold">{userInfo.name}</div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="m-3 font-semibold">
+            <Link to={"/register"}>Register</Link>
+          </div>
+        )}
       </div>
     </div>
   );

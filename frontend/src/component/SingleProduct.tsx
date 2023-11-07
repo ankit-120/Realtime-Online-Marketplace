@@ -1,14 +1,5 @@
 import React from "react";
-
-interface Product {
-  _id: string;
-  description: string;
-  image: string;
-  isSold: boolean;
-  name: string;
-  price: number;
-  seller: string;
-}
+import { Product } from "@/utils/Types";
 
 const SingleProduct: React.FC<{ product: Product }> = ({ product }) => {
   return (

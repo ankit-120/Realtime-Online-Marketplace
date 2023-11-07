@@ -140,8 +140,15 @@ const Register = () => {
           </CardContent>
           <CardFooter>
             <div>
-              <Button variant="outline" onClick={handleLogin}>
-                Login
+              <Button
+                onClick={handleLogin}
+                variant="outline"
+                disabled={loading}
+              >
+                {loading ? "Please wait" : "Login"}
+                <span className="mx-2 flex items-center">
+                  <ClipLoader loading={loading} size={20} />
+                </span>
               </Button>
               <p>
                 New User?{" "}

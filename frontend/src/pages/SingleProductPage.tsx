@@ -1,19 +1,11 @@
 import { getProductById } from "@/apis";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { GridLoader } from "react-spinners";
-
-interface Product {
-  _id: string;
-  description: string;
-  image: string;
-  isSold: boolean;
-  name: string;
-  price: number;
-  seller: string;
-}
+import { Product } from "@/utils/Types";
 
 const SingleProductPage = () => {
   const { id } = useParams();
@@ -60,6 +52,9 @@ const SingleProductPage = () => {
           <div className="my-1 text-3xl font-bold">{product.name}</div>
           <div className="my-1 text-sm">{product.description}</div>
           <div className="my-1 text-xl font-semibold">₹ {product.price}</div>
+          <div>
+            <Button variant={"outline"}>Buy now</Button>
+          </div>
         </div>
       </div>
     </div>

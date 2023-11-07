@@ -7,7 +7,7 @@ import { isLoggedIn } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/create/:id", isLoggedIn, addAuctionDetails);
+router.post("/create", isLoggedIn, addAuctionDetails);
 router.get("/auctions/all", getAllAuction);
 router.get("/logged/all", isLoggedIn, getAllAuction);
 

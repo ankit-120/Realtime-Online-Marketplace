@@ -22,6 +22,11 @@ const schema = mongoose.Schema({
     },
     isSold: {
         type: Boolean,
+        default: false,
+    },
+    isAddedToAuction: {
+        type: Boolean,
+        default: false,
     },
 });
 

@@ -1,24 +1,18 @@
 import { Auction } from "../models/auctionModel.js";
+import { Item } from "../models/itemModel.js";
 
 export const addAuctionDetails = async (req, res, next) => {
     try {
-        const { bidIncrement, timeLimit, startingPrice } = req.body;
+        const { itemId, bidIncrement, timeLimit, startingPrice } = req.body;
+        const item = await Item.findById(itemId);
         const auction = await Auction.create({
-            item: req.params.id,
+            item,
             bidIncrement,
             timeLimit,
             startingPrice,
-            seller: req.user._id,
+            seller: req.user,
+            // isSold: false,
         });
-
-        // const biddingDuration = 1 * 60 * 1000;
-        // setTimeout(() => {
-        //     console.log("end");
-        //     res.status(200).json({
-        //         message: "ended",
-        //     });
-        // }, biddingDuration);
-
         res.status(201).json({
             success: true,
             message: "Auction created successfully",

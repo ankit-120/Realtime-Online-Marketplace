@@ -29,3 +29,27 @@ export function getProductById(id: string | undefined) {
 export function createAuction() {
   return `${import.meta.env.VITE_URL}/api/auction/create`;
 }
+
+export function getAllAuction() {
+  return `${import.meta.env.VITE_URL}/api/auction/auctions/all`;
+}
+
+export function getAllAuctionExcept() {
+  return `${import.meta.env.VITE_URL}/api/auction/logged/all`;
+}
+
+export function getAuctionById(id: string | undefined) {
+  return `${import.meta.env.VITE_URL}/api/auction/get/${id}`;
+}
+
+export function getHighestBid(id: string | undefined) {
+  return `${import.meta.env.VITE_URL}/api/bid/get/highestbid/${id}`;
+}
+
+export function createBid() {
+  return `${import.meta.env.VITE_URL}/api/bid/create`;
+}
+
+export function getMyProfile() {
+  return `${import.meta.env.VITE_URL}/api/user/my/profile`;
+}

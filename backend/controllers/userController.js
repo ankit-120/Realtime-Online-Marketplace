@@ -72,7 +72,7 @@ export const login = async (req, res, next) => {
         res.status(201)
             .cookie("token", token, {
                 httpOnly: true,
-                maxAge: 15 * 60 * 1000,
+                maxAge: 60 * 60 * 1000,
                 sameSite: "none",
                 secure: true,
             })
@@ -98,4 +98,16 @@ export const logout = (req, res) => {
             success: false,
             message: "Loggedout successfully",
         });
+};
+
+export const getMyProfile = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id);
+        res.status(200).json({
+            success: true,
+            user,
+        });
+    } catch (error) {
+        next(error);
+    }
 };

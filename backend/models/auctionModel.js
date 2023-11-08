@@ -9,6 +9,10 @@ const schema = mongoose.Schema({
         type: Number,
         required: [true, "Field mandatory"],
     },
+    endTime: {
+        type: String,
+        required: [true, "Field mandatory"],
+    },
     timeLimit: {
         type: Number,
         required: [true, "Field mandatory"],

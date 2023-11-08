@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setKeyword } from "../facilities/productSlice";
+import { setUserInfo } from "@/facilities/userSlice";
 import type { RootState } from "../facilities/store";
 import {
   DropdownMenu,
@@ -12,6 +13,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import axios from "axios";
+import { getMyProfile } from "@/apis";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -24,9 +27,33 @@ const Navbar = () => {
     dispatch(setKeyword(query));
   };
 
+  const fetchProfile = async () => {
+    try {
+      const { data } = await axios.get(getMyProfile(), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      dispatch(setUserInfo(data.user));
+    } catch (error) {
+      console.log(error);
+      dispatch(
+        setUserInfo({
+          _id: "",
+          name: "",
+          email: "",
+          password: "",
+          soldItems: [],
+          purchasedItems: [],
+        })
+      );
+    }
+  };
   useEffect(() => {
-    // console.log("cjeck");
-  });
+    console.log("first");
+    fetchProfile();
+  }, []);
 
   const location = useLocation();
   const isHomePage = location.pathname.includes("/products");

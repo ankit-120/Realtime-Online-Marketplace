@@ -61,7 +61,7 @@ const MyProducts = () => {
           <div
             key={index}
             className={`${
-              !product.isSold ? "flex" : "hidden"
+              !product.isSold && !product.isAddedToAuction ? "flex" : "hidden"
             } flex-col items-center`}
           >
             {!product.isSold && <SingleProduct product={product} />}
@@ -80,6 +80,19 @@ const MyProducts = () => {
           </div>
         ))}
       </div>
+
+      <div>Items added to auction</div>
+      <div className="grid grid-cols-4 gap-4">
+        {products.map((product: Product, index) => (
+          <div
+            key={index}
+            className={`${product.isAddedToAuction ? "block" : "hidden"}`}
+          >
+            {product.isAddedToAuction && <SingleProduct product={product} />}
+          </div>
+        ))}
+      </div>
+
       <div>Items sold</div>
       <div className="grid grid-cols-4 gap-4">
         {products.map((product: Product, index) => (

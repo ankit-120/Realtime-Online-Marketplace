@@ -1,6 +1,6 @@
 import { getAllProduct, getAllProductExcept } from "@/apis";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../facilities/store";
 import { GridLoader } from "react-spinners";

@@ -1,7 +1,7 @@
 import { getProductById } from "@/apis";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { GridLoader } from "react-spinners";
@@ -20,6 +20,7 @@ const SingleProductPage = () => {
       console.log(data);
       setProduct(data.item);
       setLoading(false);
+      console.log(loading);
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.log(error);

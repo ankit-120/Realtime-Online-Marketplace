@@ -28,6 +28,7 @@ const MyProducts = () => {
       console.log(data);
       setProducts(data.items);
       setLoading(false);
+      console.log(loading);
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.log(error);
@@ -38,6 +39,7 @@ const MyProducts = () => {
     e: React.MouseEvent<HTMLButtonElement>,
     product: Product
   ) => {
+    console.log(e);
     dispatch(setSingleProduct(product));
     navigate("/auction/add");
   };

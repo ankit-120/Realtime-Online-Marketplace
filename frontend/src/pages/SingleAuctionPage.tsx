@@ -107,7 +107,7 @@ const SingleAuctionPage = () => {
     const socket = new WebSocket("ws://localhost:5000");
     setWs(socket);
 
-    socket.addEventListener("open", (event) => {
+    socket.addEventListener("open", () => {
       console.log("Connected to the WebSocket server");
     });
 
@@ -132,7 +132,7 @@ const SingleAuctionPage = () => {
       }
     });
 
-    socket.addEventListener("close", (event) => {
+    socket.addEventListener("close", () => {
       console.log("Connection closed");
       setWs(null);
     });

@@ -3,7 +3,7 @@ import SingleProduct from "@/component/SingleProduct";
 import { RootState } from "@/facilities/store";
 import { Auction } from "@/utils/Types";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { GridLoader } from "react-spinners";
@@ -40,6 +40,7 @@ const AuctionPage = () => {
         withCredentials: true,
       });
       console.log(data);
+      console.log(loading);
       setAuctions(data.auctions);
       setLoading(false);
     } catch (error) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { AiOutlineSearch } from "react-icons/ai";

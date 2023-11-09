@@ -98,9 +98,13 @@ const MyProducts = () => {
         {products.map((product: Product, index) => (
           <div
             key={index}
-            className={`${product.isAddedToAuction ? "block" : "hidden"}`}
+            className={`${
+              product.isAddedToAuction && !product.isSold ? "block" : "hidden"
+            }`}
           >
-            {product.isAddedToAuction && <SingleProduct product={product} />}
+            {product.isAddedToAuction && !product.isSold && (
+              <SingleProduct product={product} />
+            )}
           </div>
         ))}
       </div>

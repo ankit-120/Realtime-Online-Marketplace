@@ -5,7 +5,7 @@ export interface Product {
   isSold: boolean;
   name: string;
   price: number;
-  seller: string;
+  seller: User;
   isAddedToAuction: boolean;
 }
 
@@ -24,6 +24,9 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  password: string;
+  soldItems: [];
+  purchasedItems: [];
 }
 
 export interface Bid {

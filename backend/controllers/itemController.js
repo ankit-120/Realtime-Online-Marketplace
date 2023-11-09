@@ -88,7 +88,7 @@ export const getAllItems = async (req, res, next) => {
                 $options: "i",
             },
             isSold: false,
-        });
+        }).populate("seller");
         res.status(200).json({
             success: true,
             items,
@@ -101,7 +101,7 @@ export const getAllItems = async (req, res, next) => {
 //get my products
 export const getMyProducts = async (req, res, next) => {
     try {
-        const items = await Item.find({ seller: req.user });
+        const items = await Item.find({ seller: req.user }).populate("seller");
         res.status(200).json({
             success: true,
             items,
@@ -115,7 +115,9 @@ export const getMyProducts = async (req, res, next) => {
 export const getItemById = async (req, res, next) => {
     try {
         // console.log(req.params.id);
-        const item = await Item.findOne({ _id: req.params.id });
+        const item = await Item.findOne({ _id: req.params.id }).populate(
+            "seller"
+        );
         res.status(200).json({
             success: true,
             item,

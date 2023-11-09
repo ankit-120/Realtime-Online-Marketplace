@@ -72,6 +72,9 @@ const SingleProductPage = () => {
           <div className="my-1 text-3xl font-bold">{product.name}</div>
           <div className="my-1 text-sm">{product.description}</div>
           <div className="my-1 text-xl font-semibold">₹ {product.price}</div>
+          <div className="my-1 text-xl font-semibold">
+            Sold by : {product.seller.name}
+          </div>
           <div>
             <Button variant={"outline"} onClick={handleBuy}>
               Buy now

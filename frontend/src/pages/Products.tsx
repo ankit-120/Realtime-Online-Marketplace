@@ -55,9 +55,6 @@ const Products = () => {
 
   return (
     <div className="mx-44 mt-28">
-      <Button variant={"outline"} onClick={fetchProductsExcept}>
-        click
-      </Button>
       <div className="grid grid-cols-4 gap-4">
         {products.map((product: Product, index) => (
           <Link to={`/product/${product._id}`} key={index}>

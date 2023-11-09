@@ -111,13 +111,14 @@ const SingleAuctionPage = () => {
   const fetchAgain = async () => {
     const { data } = await axios.get(getAuctionById(id));
     const formData = {
-      sellerId: data.auctions.seller,
+      sellerId: data.auctions.item.seller,
       itemId: data.auctions.item._id,
     };
     return formData;
   };
   const handleBuy = async () => {
     try {
+      toast.success("Item purchased successfully");
       // setLoading(true);
       const formData = await fetchAgain();
       console.log(formData);
@@ -129,7 +130,6 @@ const SingleAuctionPage = () => {
       });
       console.log(data);
       // setLoading(false);
-      // toast.success(data.message);
     } catch (error: any) {
       console.log(error);
       // toast.error(error.response.data.message);
@@ -163,6 +163,9 @@ const SingleAuctionPage = () => {
             name: data.bidder,
             _id: "",
             email: "",
+            password: "",
+            soldItems: [],
+            purchasedItems: [],
           },
           item: "",
         };
@@ -209,15 +212,28 @@ const SingleAuctionPage = () => {
   }
 
   return (
-    <div className="mt-28">
+    <div className="mx-44 mt-28">
       <div className="flex">
-        <div className="w-2/5">TODO</div>
-        <div className="w-3/5">
+        <div className="flex w-2/5 flex-col items-center">
           <div>
+            <img
+              src={auction?.item.image}
+              alt="image"
+              className="h-52 w-full object-contain"
+            />
+          </div>
+          <div className="m-3 font-semibold">{auction?.item.name}</div>
+        </div>
+        <div className="w-3/5">
+          <div className="m-2 text-xl font-semibold">
             Auction ends at : <span>{auction?.endTime}</span>
           </div>
-          <div>Highest bid : {highestBid?.amount}</div>
-          <div>Highest bidder : {highestBid?.bidder?.name}</div>
+          <div className="m-2 text-xl font-semibold">
+            Highest bid : {highestBid?.amount}
+          </div>
+          <div className="m-2 text-xl font-semibold">
+            Highest bidder : {highestBid?.bidder?.name}
+          </div>
 
           <div>
             <Label htmlFor="placeBid">Enter Your Bid</Label>
@@ -227,11 +243,8 @@ const SingleAuctionPage = () => {
               value={placeBid}
               onChange={(e) => handlePlaceBid(e)}
             />
-            <Button variant={"outline"} onClick={handleSubmit}>
+            <Button variant={"outline"} onClick={handleSubmit} className="my-2">
               Submit
-            </Button>
-            <Button variant={"outline"} onClick={handleBuy}>
-              Buy
             </Button>
           </div>
         </div>

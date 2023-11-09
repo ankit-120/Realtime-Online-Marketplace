@@ -72,9 +72,18 @@ const Navbar = () => {
         withCredentials: true,
       });
       toast.success(data.message);
-      dispatch(setUserInfo({}));
+      dispatch(
+        setUserInfo({
+          _id: "",
+          name: "",
+          email: "",
+          password: "",
+          soldItems: [],
+          purchasedItems: [],
+        })
+      );
       dispatch(setLogin(false));
-      navigate("/registed");
+      navigate("/register");
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message);

@@ -102,7 +102,9 @@ export const logout = (req, res) => {
 
 export const getMyProfile = async (req, res, next) => {
     try {
-        const user = await User.findById(req.user._id);
+        const user = await User.findById(req.user._id).populate(
+            "purchasedItems"
+        );
         res.status(200).json({
             success: true,
             user,

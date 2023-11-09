@@ -25,15 +25,12 @@ export const getHighestBid = async (req, res, next) => {
     try {
         // console.log(req.params.id);
         const auction = await Auction.findById(req.params.id);
-        console.log("auction ", auction);
         const item = auction.item;
-        console.log("item ", item);
         const bid = await Bid.findOne({ item: item })
             .sort({
                 amount: -1,
             })
             .populate("bidder");
-        console.log("bid ", bid);
         res.status(200).json({
             success: true,
             bid,

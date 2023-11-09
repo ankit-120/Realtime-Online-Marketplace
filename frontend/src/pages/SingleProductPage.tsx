@@ -1,4 +1,4 @@
-import { getProductById } from "@/apis";
+import { buyPorduct, getProductById } from "@/apis";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -15,15 +15,34 @@ const SingleProductPage = () => {
 
   const fetchProducts = async () => {
     try {
-      setLoading(true);
       const { data } = await axios.get(getProductById(id));
       console.log(data);
       setProduct(data.item);
-      setLoading(false);
       console.log(loading);
     } catch (error: any) {
       toast.error(error.response.data.message);
       console.log(error);
+    }
+  };
+
+  const handleBuy = async () => {
+    try {
+      setLoading(true);
+      const formData = {
+        sellerId: product?.seller,
+        itemId: id,
+      };
+      const { data } = await axios.post(buyPorduct(), formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      setLoading(false);
+      toast.success(data.message);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -54,7 +73,9 @@ const SingleProductPage = () => {
           <div className="my-1 text-sm">{product.description}</div>
           <div className="my-1 text-xl font-semibold">₹ {product.price}</div>
           <div>
-            <Button variant={"outline"}>Buy now</Button>
+            <Button variant={"outline"} onClick={handleBuy}>
+              Buy now
+            </Button>
           </div>
         </div>
       </div>

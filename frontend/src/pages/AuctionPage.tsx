@@ -4,14 +4,17 @@ import { RootState } from "@/facilities/store";
 import { Auction } from "@/utils/Types";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GridLoader } from "react-spinners";
 
 const AuctionPage = () => {
   const [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { login } = useSelector((state: RootState) => state.login);
+  const navigate = useNavigate();
 
   const fetchAuctions = async () => {
     try {
@@ -49,6 +52,10 @@ const AuctionPage = () => {
   };
 
   useEffect(() => {
+    if (!login) {
+      toast.error("Login First");
+      navigate("/register");
+    }
     if (userInfo._id === "") {
       fetchAuctions();
     } else {
@@ -68,9 +75,14 @@ const AuctionPage = () => {
     <div className="mt-28">
       <div className="grid grid-cols-4 gap-4">
         {auctions.map((auction: Auction, index) => (
-          <Link to={`/auction/get/${auction._id}`} key={index}>
-            <SingleProduct product={auction.item} />
-          </Link>
+          <div
+            key={index}
+            className={`${auction.item.isSold ? "hidden" : "block"}`}
+          >
+            <Link to={`/auction/get/${auction._id}`}>
+              <SingleProduct product={auction.item} />
+            </Link>
+          </div>
         ))}
       </div>
     </div>

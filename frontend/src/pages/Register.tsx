@@ -17,6 +17,7 @@ import { ClipLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "../facilities/userSlice";
+import { setLogin } from "@/facilities/loginSlice";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const Register = () => {
       setLoading(false);
       toast.success("Registered successfully");
       dispatch(setUserInfo(data.user));
+      dispatch(setLogin(true));
       console.log(data);
       navigate("/");
     } catch (error) {
@@ -89,6 +91,7 @@ const Register = () => {
       setLoading(false);
       toast.success("Loggedin successfully");
       dispatch(setUserInfo(data.user));
+      dispatch(setLogin(true));
       console.log(data);
       navigate("/");
     } catch (error) {

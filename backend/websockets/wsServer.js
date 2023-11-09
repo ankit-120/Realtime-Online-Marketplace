@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import jwt from "jsonwebtoken";
 import { wss } from "../app.js";
 
-function setupWebSocketServer() {
+export function setupWebSocketServer(highestBid) {
     // const wss = new WebSocketServer({ server });
 
     // const clients = new Set();
@@ -25,7 +25,7 @@ function setupWebSocketServer() {
     //     });
     // });
 
-    let highestBid = 0;
+    // let highestBid = 0;
 
     wss.on("connection", (ws, req) => {
         console.log("c1 connect");
@@ -54,8 +54,10 @@ function setupWebSocketServer() {
                 if (newBid > highestBid) {
                     highestBid = newBid;
                     // Broadcast the new highest bid to all clients.
+                    console.log("clients sixe ", wss.clients.size);
                     wss.clients.forEach((client) => {
                         if (client.readyState === WebSocket.OPEN) {
+                            console.log("send");
                             client.send(
                                 JSON.stringify({
                                     type: "highest-bid",

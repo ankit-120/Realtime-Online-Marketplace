@@ -1,4 +1,4 @@
-import { createBid, getAuctionById, getHighestBid } from "@/apis";
+import { buyPorduct, createBid, getAuctionById, getHighestBid } from "@/apis";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,15 +7,20 @@ import { Auction, Bid } from "@/utils/Types";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { setAuctionInfo } from "@/facilities/auctionSlice";
 
 const SingleAuctionPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState<string>("");
   const [placeBid, setPlaceBid] = useState<string>("");
   const [auctionEnds, setAuctionEnds] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.user);
+  const { auctionInfo } = useSelector((state: RootState) => state.auction);
 
   //   const [chatHistory, setChatHistory] = useState<string[]>([]);
 
@@ -43,6 +48,7 @@ const SingleAuctionPage = () => {
       const { data } = await axios.get(getAuctionById(id));
       console.log(data);
       setAuction(data.auctions);
+      dispatch(setAuctionInfo(data.auctions));
     } catch (error) {
       console.log(error);
     }
@@ -64,8 +70,9 @@ const SingleAuctionPage = () => {
       if (Number(placeBid) > highestBid?.amount) {
         ws.send(message);
         handleCreateBid();
+      } else {
+        toast.error("Please enter amount more than current highest");
       }
-      toast.error("Please enter amount more than current highest");
       // setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
       setMessage("");
     } else {
@@ -101,9 +108,42 @@ const SingleAuctionPage = () => {
     }
   };
 
+  const fetchAgain = async () => {
+    const { data } = await axios.get(getAuctionById(id));
+    const formData = {
+      sellerId: data.auctions.seller,
+      itemId: data.auctions.item._id,
+    };
+    return formData;
+  };
+  const handleBuy = async () => {
+    try {
+      // setLoading(true);
+      const formData = await fetchAgain();
+      console.log(formData);
+      const { data } = await axios.post(buyPorduct(), formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      // setLoading(false);
+      toast.success(data.message);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleBack = () => {
+    navigate("/product");
+  };
+
   useEffect(() => {
     fetchAuction();
     fetchHighestBid();
+  }, []);
+  useEffect(() => {
     const socket = new WebSocket("ws://localhost:5000");
     setWs(socket);
 
@@ -113,9 +153,9 @@ const SingleAuctionPage = () => {
 
     socket.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
+      // console.log(data);
       if (data.type === "highest-bid") {
-        // handleCreateBid();
+        console.log(data);
         const hiBid: Bid = {
           amount: data.value,
           bidder: {
@@ -129,6 +169,7 @@ const SingleAuctionPage = () => {
       }
       if (data.type === "auction-end") {
         setAuctionEnds(true);
+        handleBuy();
       }
     });
 
@@ -148,8 +189,22 @@ const SingleAuctionPage = () => {
   //   fetchHighestBid();
   // }, [highestBid]);
 
-  if (auctionEnds) {
-    return <div className="mt-28">Auction Ends</div>;
+  if (auctionEnds || auction?.item.isSold) {
+    return (
+      <div className="mt-28 flex h-[70vh] flex-col items-center justify-center">
+        <div className="m-2 text-2xl font-bold text-slate-800">
+          Auction Ended
+        </div>
+        <div className="m-2 text-xl font-semibold text-slate-800">
+          Item sold to {highestBid?.bidder.name} at Rs {highestBid?.amount}
+        </div>
+        <div>
+          <Button variant={"outline"} onClick={handleBack}>
+            Go to Product page
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -173,6 +228,9 @@ const SingleAuctionPage = () => {
             />
             <Button variant={"outline"} onClick={handleSubmit}>
               Submit
+            </Button>
+            <Button variant={"outline"} onClick={handleBuy}>
+              Buy
             </Button>
           </div>
         </div>

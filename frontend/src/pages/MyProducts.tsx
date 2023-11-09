@@ -6,15 +6,18 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GridLoader } from "react-spinners";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSingleProduct } from "@/facilities/productSlice";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "@/facilities/store";
 
 const MyProducts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { login } = useSelector((state: RootState) => state.login);
+  const { userInfo } = useSelector((state: RootState) => state.user);
 
   const fetchProducts = async () => {
     try {
@@ -45,6 +48,9 @@ const MyProducts = () => {
   };
 
   useEffect(() => {
+    if (!login) {
+      navigate("/register");
+    }
     fetchProducts();
   }, []);
 
@@ -56,8 +62,10 @@ const MyProducts = () => {
     );
   }
   return (
-    <div className="mt-28">
-      <div>Items to be sold</div>
+    <div className="mx-44 mt-28">
+      <div className="my-5 items-center text-2xl font-bold">
+        Items to be sold
+      </div>
       <div className="grid grid-cols-4 gap-4">
         {products.map((product: Product, index) => (
           <div
@@ -75,15 +83,17 @@ const MyProducts = () => {
               >
                 Add to auction
               </Button>
-              <Button className="m-2" variant={"outline"}>
+              {/* <Button className="m-2" variant={"outline"}>
                 Edit
-              </Button>
+              </Button> */}
             </div>
           </div>
         ))}
       </div>
 
-      <div>Items added to auction</div>
+      <div className="my-5 items-center text-2xl font-bold">
+        Items added to Auction
+      </div>
       <div className="grid grid-cols-4 gap-4">
         {products.map((product: Product, index) => (
           <div
@@ -95,11 +105,20 @@ const MyProducts = () => {
         ))}
       </div>
 
-      <div>Items sold</div>
+      <div className="my-5 items-center text-2xl font-bold">Items sold</div>
       <div className="grid grid-cols-4 gap-4">
         {products.map((product: Product, index) => (
           <div key={index} className={`${product.isSold ? "block" : "hidden"}`}>
             {product.isSold && <SingleProduct product={product} />}
+          </div>
+        ))}
+      </div>
+
+      <div className="my-5 items-center text-2xl font-bold">My Purchase</div>
+      <div className="grid grid-cols-4 gap-4">
+        {userInfo.purchasedItems.map((product: Product, index) => (
+          <div key={index}>
+            <SingleProduct product={product} />
           </div>
         ))}
       </div>

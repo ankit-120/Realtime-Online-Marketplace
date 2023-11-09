@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,8 +14,14 @@ import axios from "axios";
 import { addProduct } from "@/apis";
 import { ClipLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/facilities/store";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
+  const { login } = useSelector((state: RootState) => state.login);
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [productData, setProductData] = useState({
     name: "",
@@ -86,6 +92,13 @@ const AddProduct = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (!login) {
+      toast.error("Login First");
+      navigate("/register");
+    }
+  }, []);
 
   return (
     <div className="mt-32">

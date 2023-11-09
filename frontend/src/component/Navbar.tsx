@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setKeyword } from "../facilities/productSlice";
 import { setUserInfo } from "@/facilities/userSlice";
+import { setLogin } from "@/facilities/loginSlice";
 import type { RootState } from "../facilities/store";
 import {
   DropdownMenu,
@@ -14,9 +15,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import axios from "axios";
-import { getMyProfile } from "@/apis";
+import { getMyProfile, logout } from "@/apis";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state: RootState) => state.user);
   //search query
@@ -36,6 +39,7 @@ const Navbar = () => {
         withCredentials: true,
       });
       dispatch(setUserInfo(data.user));
+      dispatch(setLogin(true));
     } catch (error) {
       console.log(error);
       dispatch(
@@ -48,6 +52,7 @@ const Navbar = () => {
           purchasedItems: [],
         })
       );
+      dispatch(setLogin(false));
     }
   };
   useEffect(() => {
@@ -56,7 +61,26 @@ const Navbar = () => {
   }, []);
 
   const location = useLocation();
-  const isHomePage = location.pathname.includes("/products");
+  const isHomePage = location.pathname.includes("/product");
+
+  const handleLogout = async () => {
+    try {
+      const { data } = await axios.get(logout(), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      toast.success(data.message);
+      dispatch(setUserInfo({}));
+      dispatch(setLogin(false));
+      navigate("/registed");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <div className="fixed top-0 z-50 flex w-full items-center justify-between bg-slate-200 shadow-md ">
       <div className="p-5 text-2xl font-bold">Realtime Store</div>
@@ -80,16 +104,16 @@ const Navbar = () => {
 
       <div className="flex ">
         <Link to={"/"} className="m-3 font-semibold">
-          Home
-        </Link>
-        <Link to={"/products"} className="m-3 font-semibold">
           Products
+        </Link>
+        <Link to={"/auction"} className="m-3 font-semibold">
+          Auction
         </Link>
         <Link to={"/add/product"} className="m-3 font-semibold">
           Add Product
         </Link>
-        <Link to={"/auction"} className="m-3 font-semibold">
-          Auction
+        <Link to={"/my/product"} className="m-3 font-semibold">
+          My Product
         </Link>
         {userInfo.name != "" ? (
           <DropdownMenu>
@@ -99,7 +123,7 @@ const Navbar = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (

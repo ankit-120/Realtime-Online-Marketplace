@@ -53,3 +53,11 @@ export function createBid() {
 export function getMyProfile() {
   return `${import.meta.env.VITE_URL}/api/user/my/profile`;
 }
+
+export function buyPorduct() {
+  return `${import.meta.env.VITE_URL}/api/item/buy`;
+}
+
+export function logout() {
+  return `${import.meta.env.VITE_URL}/api/user/logout`;
+}

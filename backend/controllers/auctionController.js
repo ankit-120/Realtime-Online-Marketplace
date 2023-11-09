@@ -2,6 +2,7 @@ import { Auction } from "../models/auctionModel.js";
 import { Item } from "../models/itemModel.js";
 import { wss } from "../app.js";
 import { WebSocket } from "ws";
+import setupWebSocketServer from "../websockets/wsServer.js";
 
 export const addAuctionDetails = async (req, res, next) => {
     try {
@@ -44,22 +45,22 @@ export const addAuctionDetails = async (req, res, next) => {
                         })
                     );
                 }
-
-                // Check if the auction has ended
-                if (currentTime >= auctionEndTime) {
-                    // Auction has ended
-                    wss.clients.forEach((client) => {
-                        if (client.readyState === WebSocket.OPEN) {
-                            client.send(
-                                JSON.stringify({ type: "auction-end" })
-                            );
-                        }
-                    });
-
-                    // Clear the auction end timer
-                    clearInterval(auctionEndTimer);
-                }
             });
+
+            // Check if the auction has ended
+            if (currentTime >= auctionEndTime) {
+                // Auction has ended
+                console.log("client size ", wss.clients.size);
+                wss.clients.forEach((client) => {
+                    console.log("times");
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify({ type: "auction-end" }));
+                    }
+                });
+
+                // Clear the auction end timer
+                clearInterval(auctionEndTimer);
+            }
         };
         const auctionEndTimer = setInterval(checkAuctionEnd, 1000);
         // });
@@ -109,7 +110,7 @@ export const getAuctionById = async (req, res, next) => {
         const auctions = await Auction.findOne({ _id: req.params.id }).populate(
             "item"
         );
-
+        setupWebSocketServer(0);
         res.status(200).json({
             success: true,
             auctions,

@@ -106,34 +106,34 @@ const AddToAuction = () => {
     }
   };
 
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:5000");
-    setWs(socket);
+  // useEffect(() => {
+  //   const socket = new WebSocket("ws://localhost:5000");
+  //   setWs(socket);
 
-    socket.addEventListener("open", () => {
-      console.log("Connected to the WebSocket server");
-    });
+  //   socket.addEventListener("open", () => {
+  //     console.log("Connected to the WebSocket server");
+  //   });
 
-    socket.addEventListener("message", (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data);
-      if (data.type === "highest-bid") {
-        // handleCreateBid();
-        // setHighestBid(data.value);
-      }
-    });
+  //   socket.addEventListener("message", (event) => {
+  //     const data = JSON.parse(event.data);
+  //     // console.log(data);
+  //     if (data.type === "highest-bid") {
+  //       // handleCreateBid();
+  //       // setHighestBid(data.value);
+  //     }
+  //   });
 
-    socket.addEventListener("close", () => {
-      console.log("Connection closed");
-      setWs(null);
-    });
+  //   socket.addEventListener("close", () => {
+  //     console.log("Connection closed");
+  //     setWs(null);
+  //   });
 
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-    };
-  }, [receivedData]);
+  //   return () => {
+  //     if (ws) {
+  //       ws.close();
+  //     }
+  //   };
+  // }, [receivedData]);
 
   return (
     <div className="mt-28">

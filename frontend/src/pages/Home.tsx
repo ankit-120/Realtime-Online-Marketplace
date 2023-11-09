@@ -1,12 +1,13 @@
-// import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  return (
-    <div className="mt-28">
-      <Link to={"/my/product"}>My Product</Link>
-    </div>
-  );
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/product");
+  }, []);
+
+  return <div></div>;
 };
 
 export default Home;

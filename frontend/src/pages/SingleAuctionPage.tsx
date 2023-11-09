@@ -20,7 +20,7 @@ const SingleAuctionPage = () => {
   const [placeBid, setPlaceBid] = useState<string>("");
   const [auctionEnds, setAuctionEnds] = useState(false);
   const { userInfo } = useSelector((state: RootState) => state.user);
-  const { auctionInfo } = useSelector((state: RootState) => state.auction);
+  // const { auctionInfo } = useSelector((state: RootState) => state.auction);
 
   //   const [chatHistory, setChatHistory] = useState<string[]>([]);
 
@@ -127,6 +127,7 @@ const SingleAuctionPage = () => {
         },
         withCredentials: true,
       });
+      console.log(data);
       // setLoading(false);
       // toast.success(data.message);
     } catch (error: any) {

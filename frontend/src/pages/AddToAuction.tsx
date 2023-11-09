@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/facilities/store";
 import {
@@ -22,7 +22,7 @@ const AddToAuction = () => {
   //getting product from redux store
   const { singleProduct } = useSelector((state: RootState) => state.products);
 
-  const [ws, setWs] = useState<WebSocket | null>(null);
+  // const [ws, setWs] = useState<WebSocket | null>(null);
 
   const [auctionData, setAuctionData] = useState({
     bidIncrement: "",
@@ -30,7 +30,7 @@ const AddToAuction = () => {
     timeLimit: "",
   });
 
-  const [receivedData, setReceivedData] = useState("");
+  // const [receivedData, setReceivedData] = useState("");
 
   const [loading, setLoading] = useState(false);
   //handle time limit
@@ -84,7 +84,7 @@ const AddToAuction = () => {
       console.log(data);
       setLoading(false);
       toast.success("Auction Created");
-      setReceivedData("received");
+      // setReceivedData("received");
       setAuctionData({
         bidIncrement: "",
         startingPrice: "",
